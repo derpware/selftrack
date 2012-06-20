@@ -1,11 +1,15 @@
-import json
-import eeml
+#!/usr/bin/env python
+
+#-*- coding: utf-8 -*-
+
+from time import sleep
+from json import load
 import config
-import time
+import eeml
 
 def noOfOpenTabs():
 	json_data=open(MOZILLA_SESSIONSTORE)
-	data = json.load(json_data)
+	data = load(json_data)
 	tabs=0;
 	for window in data["windows"]:
 		tabs = tabs + len(window["tabs"])
@@ -21,7 +25,7 @@ def loadavg():
 
 feed = eeml.Pachube(config.API_URL, config.API_KEY)
 while 1 :
-	time.sleep(30)
+	sleep(30)
 	update_data = []
 	update_data.append(eeml.Data("browser.tabs", noOfOpenTabs()))
 	update_data.append(eeml.Data("cpu.temperature", temperature(), unit=eeml.Celsius()))
