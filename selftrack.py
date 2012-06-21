@@ -8,19 +8,24 @@ import config
 import eeml
 
 def noOfOpenTabs():
-	json_data=open(MOZILLA_SESSIONSTORE)
+	json_data=open(config.MOZILLA_SESSIONSTORE)
 	data = load(json_data)
-	tabs=0;
+	json_data.close()
+	tabs = 0
 	for window in data["windows"]:
 		tabs = tabs + len(window["tabs"])
 	return tabs
 
 def temperature():
-	temperature = open("/proc/acpi/ibm/thermal").read().split()[1]
+	inputFile = open("/proc/acpi/ibm/thermal")
+	temperature = inputFile.read().split()[1]
+	inputFile.close()
 	return temperature
 
 def loadavg():
-	loadavg = open("/proc/loadavg").read().split()[0]
+	inputFile = open("/proc/loadavg")
+	loadavg = inputFile.read().split()[0]
+	inputFile.close()
 	return loadavg
 
 feed = eeml.Pachube(config.API_URL, config.API_KEY)
