@@ -17,3 +17,6 @@ SelfTrack is a Python application, that runs in the background of your Linux box
 
 ## Demo
 Take a look at https://cosm.com/feeds/63631
+
+## License
+Licensed under MIT license. See LICENSE for details.
