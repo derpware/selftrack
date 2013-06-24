@@ -4,8 +4,10 @@
 
 from time import sleep
 import config
-import eeml
 import sys
+
+import xively
+import thingspeak
 
 if sys.platform.startswith("linux"):
 	import linux as collector
@@ -15,20 +17,19 @@ else:
 	print >> sys.stderr, "Platform not supported. Aborting"
 	sys.exit(1);
 
-feed = eeml.Pachube(config.API_URL, config.API_KEY)
-while 1 :
-	sleep(30)
-	update_data = []
-	update_data.append(eeml.Data("browser.tabs", collector.noOfOpenTabs()))
-	update_data.append(eeml.Data("cpu.temperature", collector.temperature(), unit=eeml.Celsius()))
-	update_data.append(eeml.Data("cpu.loadavg", collector.loadavg()))
-	update_data.append(eeml.Data("os.memory", collector.memory()))
-	update_data.append(eeml.Data("os.swap", collector.swap()))
-	update_data.append(eeml.Data("os.processes", collector.processes()))
-	
+xively.init()
 
-	feed.update(update_data)
-	try:
-		feed.put()
-	except Exception, err:
-		print "Couldn't send data to pachube: ", err
+while 1 :
+	data = {}
+	data["browser.tabs"] = collector.noOfOpenTabs()
+	data["cpu.temperature"] = collector.temperature()
+	data["cpu.loadavg"] = collector.loadavg()
+	data["os.memory"] = collector.memory()
+	data["os.swap"] = collector.swap()
+	data["os.processes"] = collector.processes()
+
+	thingspeak.push(data)
+	xively.push(data)
+	
+	sleep(30)
+
