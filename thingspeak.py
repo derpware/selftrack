@@ -12,9 +12,10 @@ def push(data):
 	headers = {"Content-type": "application/x-www-form-urlencoded","Accept": "text/plain"}
 	
 	conn = httplib.HTTPConnection("api.thingspeak.com:80")
-	conn.request("POST", "/update", params, headers)
-	
-	response = conn.getresponse()
-	print response.status, response.reason
-	data = response.read()
+	try:
+		conn.request("POST", "/update", params, headers)	
+		response = conn.getresponse()
+		data = response.read()
+	except Exception, err:
+		print "Couldn't send data to ThingSpeak: ", err
 	conn.close()
